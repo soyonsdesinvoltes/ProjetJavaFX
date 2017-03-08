@@ -1,5 +1,7 @@
 package application;
 
+import java.io.FileNotFoundException;
+
 import application.Character.Direction;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -34,10 +36,14 @@ public class Graph extends Application {
 	private static final String CROISEMENT3 = "images/TN_1.png";
 	private static final String END = "images/EN_1.png";
 	private static final String ARR = "images/VTOL_2.png";
-	private static final String HERO_IMAGE_LOC = "images/hero.png";
+	private static final String HERO_IMAGE_LOC = "images/2D.png";
 	private static final String MOB = "images/mob3.png";
 	private static final String WINNER = "images/winner.jpg";
-
+	private static final String MUR = "images/mur.jpg";
+	private static final String LOOSE = "images/loose.jpg";
+	
+	final Image gameover = new Image(LOOSE);
+	final Image imageX = new Image(MUR);
 	final Image image1 = new Image(IMAGECOULOIR);
 	final Image image2 = new Image(VIRAGEDROITBAS);
 	final Image image3 = new Image(CROISEMENT3);
@@ -83,7 +89,7 @@ public class Graph extends Application {
 		heroImage = new Image(HERO_IMAGE_LOC, 30, 30, false, false);
 		hero = new ImageView(heroImage);
 		// on retourne l'image pour que le chevalier regarde vers la drroite
-		hero.setRotate(180);
+		//hero.setRotate(180);
 
 		// Creation de l'image du mob
 		mobImage = new Image(MOB, 30, 30, false, false);
@@ -164,6 +170,7 @@ public class Graph extends Application {
 							|| alphonse.getCaseCourante().getLettre() == '4') {
 						gc.drawImage(winner, 0, 0, MAP_LARGEUR, MAP_HAUTEUR);
 						hero.setVisible(false);
+						mob.setVisible(false);
 						trouveSortie = true;
 
 					}
@@ -175,12 +182,27 @@ public class Graph extends Application {
 		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
+				if (!blurp.getCaseCourante().equals(alphonse.getCaseCourante())){
 				if (!isHero) {
 
 					blurp.deplacerMob();
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					DeplacerHero(blurp);
 				}
-			}
+				}
+				else{
+					hero.setVisible(false);
+					mob.setVisible(false);
+					gc.drawImage(gameover, 0, 0, MAP_LARGEUR, MAP_HAUTEUR);
+				
+				}
+				}
+			
 		});
 
 		stage.setScene(scene);
@@ -237,132 +259,276 @@ public class Graph extends Application {
 		iv = new ImageView(image1);
 
 		gc.drawImage(image1, 50, 50, inc, inc);
+		
+		
+		
+		 for (int i=0 ; i < carte.getNbLigne() ; i++)
 
-		for (application.Node n : carte.getCarteNode()) {
-			Image rotatedImage = null;
-			SnapshotParameters params = new SnapshotParameters();
-			switch (n.getLettre()) {
-			case 'L':
-				gc.drawImage(image1, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'M':
-				iv = new ImageView(image1);
-				iv.setRotate(90);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'R':
-				gc.drawImage(image2, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'S':
-				iv = new ImageView(image2);
-				iv.setRotate(90);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'T':
-				iv = new ImageView(image2);
-				iv.setRotate(-90);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'U':
-				iv = new ImageView(image2);
-				iv.setRotate(180);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'G':
-				gc.drawImage(image3, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'H':
-				iv = new ImageView(image3);
-				iv.setRotate(90);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'I':
-				iv = new ImageView(image3);
-				iv.setRotate(-90);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'J':
-				iv = new ImageView(image3);
-				iv.setRotate(180);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case '1':
-				gc.drawImage(image5, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case '2':
-				iv = new ImageView(image5);
-				iv.setRotate(90);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case '3':
-				iv = new ImageView(image5);
-				iv.setRotate(-90);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case '4':
-				iv = new ImageView(image5);
-				iv.setRotate(180);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'C':
-				gc.drawImage(image4, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
+		    {
 
-			case 'D':
-				iv = new ImageView(image4);
-				iv.setRotate(90);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'E':
-				iv = new ImageView(image4);
-				iv.setRotate(-90);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
-			case 'F':
-				iv = new ImageView(image4);
-				iv.setRotate(180);
-				params = new SnapshotParameters();
-				params.setFill(Color.TRANSPARENT);
-				rotatedImage = iv.snapshot(params, null);
-				gc.drawImage(rotatedImage, inc * n.getX(), inc * n.getY(), inc, inc);
-				break;
+		        
 
-			}
-		}
+		        for (int c=0 ; c < carte.getNbCharParLigne() ; c ++)
+
+		        {
+
+		        	Image rotatedImage = null;
+
+		        	SnapshotParameters params = new SnapshotParameters();
+
+		switch (carte.donjon[i][c]) {
+
+					
+					case 'L':
+
+						gc.drawImage(image1, inc * c, inc * i, inc, inc);
+
+						break;	
+
+					case 'M':
+
+						iv = new ImageView(image1);
+
+						iv.setRotate(90);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;					
+
+					case 'R':
+
+						gc.drawImage(image2, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case 'S':
+
+						iv = new ImageView(image2);
+
+						iv.setRotate(90);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;	
+
+					case 'T':
+
+						iv = new ImageView(image2);
+
+						iv.setRotate(-90);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;			
+
+					case 'U':
+
+						iv = new ImageView(image2);
+
+						iv.setRotate(180);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;			
+
+					case 'G':
+
+						gc.drawImage(image3, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case 'H':
+
+						iv = new ImageView(image3);
+
+						iv.setRotate(90);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case 'I':
+
+						iv = new ImageView(image3);
+
+						iv.setRotate(-90);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case 'J':
+
+						iv = new ImageView(image3);
+
+						iv.setRotate(180);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case '1':
+
+						gc.drawImage(image5, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case '2':
+
+						iv = new ImageView(image5);
+
+						iv.setRotate(90);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case '3':
+
+						iv = new ImageView(image5);
+
+						iv.setRotate(-90);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case '4':
+
+						iv = new ImageView(image5);
+
+						iv.setRotate(180);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case 'C':
+
+						gc.drawImage(image4, inc * c, inc * i, inc, inc);
+
+						break;
+
+
+
+					case 'D':
+
+						iv = new ImageView(image4);
+
+						iv.setRotate(90);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case 'E':
+
+						iv = new ImageView(image4);
+
+						iv.setRotate(-90);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case 'F':
+
+						iv = new ImageView(image4);
+
+						iv.setRotate(180);
+
+						params = new SnapshotParameters();
+
+						params.setFill(Color.TRANSPARENT);
+
+						rotatedImage = iv.snapshot(params, null);
+
+						gc.drawImage(rotatedImage, inc * c, inc * i, inc, inc);
+
+						break;
+
+					case 'X':
+
+									
+
+						gc.drawImage(imageX, inc * c, inc * i, inc, inc);
+
+						break;
+
+
+
+					}
+
+		        }
+		    }
 
 	}
 

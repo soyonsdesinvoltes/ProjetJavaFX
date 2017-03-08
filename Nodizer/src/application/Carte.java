@@ -15,7 +15,7 @@ public class Carte {
 	int nbLigne = 0;
 	int nbCharParLigne = 0;
 	List<Node> carteNode = new ArrayList<Node>();
-
+	char [][]donjon = null;
 	public int getNbLigne() {
 		return nbLigne;
 	}
@@ -41,7 +41,7 @@ public class Carte {
 
 	public char[][] importerCarte(String url) throws FileNotFoundException {
 
-		char[][] dongeon;
+		
 
 		String ligne = "", total = "";
 
@@ -65,28 +65,28 @@ public class Carte {
 		 * représentant le labyrinthe
 		 */
 		char tab[] = total.toCharArray();
-		dongeon = new char[nbLigne][nbCharParLigne];
+		donjon = new char[nbLigne][nbCharParLigne];
 
 		// Création de la matrice
 		int i, j, k = 0;
 
 		for (i = 0; i < nbLigne; i++) {
 			for (j = 0; j < nbCharParLigne; j++) {
-				dongeon[i][j] = tab[k];
+				donjon[i][j] = tab[k];
 				/*
 				 * Pour afficher la matrice (test)
 				 */
 				if ((j + 1) % (nbCharParLigne) == 0) {
-					System.out.println(dongeon[i][j]);
+					System.out.println(donjon[i][j]);
 				} else {
-					System.out.print(dongeon[i][j]);
+					System.out.print(donjon[i][j]);
 				}
 
 				k++;
 			}
 		}
 
-		return dongeon;
+		return donjon;
 	}
 
 	public void extractNode(char[][] carte) {
